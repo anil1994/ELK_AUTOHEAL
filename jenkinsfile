@@ -1,0 +1,20 @@
+pipeline {
+    agent { node { label '-----'  } }
+
+
+    stages {
+
+        stage('Prepare') {
+            steps {
+				deleteDir()
+				checkout scm
+            }
+        } 
+         
+        stage('Check and autoheal ELK service on elk') {    
+            steps {
+                sh '''
+                ansible-playbook -i inventory  elk.yml -vv
+				'''
+            }
+        }
