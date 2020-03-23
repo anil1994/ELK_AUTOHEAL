@@ -1,0 +1,85 @@
+- hosts: elk
+  gather_facts: false
+  become: yes
+  tasks:
+
+    - name: Check Elasticsearch Service
+      command: systemctl status elasticsearch
+      register: elasticsearch_service
+      ignore_errors: yes
+    - name: Elasticsearch  status
+      debug:
+        var: elasticsearch_service.stdout_lines
+
+
+    - name: Send e-mail to inform Elasticsearch service does not work therefore, service is restarted
+      connection: local
+      mail:
+        host: localhost
+        port: 25
+        subject: Elasticsearch service does not work on ---- therefore, service is restarted
+        body: Hi, Elasticsearch service does not work on --- therefore, service is restarted
+        from: ansible@intertech.com.tr
+        to: ------
+      run_once: true
+      delegate_to: localhost
+      when: elasticsearch_service.stdout.find('running') == -1
+
+
+    - name: Restart services if service is not running
+      command: systemctl restart  elasticsearch
+      when: elasticsearch_service.stdout.find('running') == -1
+
+
+    - name: Check Kibana Service
+      command: systemctl status kibana
+      register: kibana_service
+      ignore_errors: yes
+
+    - name: Kibana status
+      debug:
+        var: kibana_service.stdout_lines
+
+
+    - name: Send e-mail to inform Kibana service does not work therefore, service is restarted
+      connection: local
+      mail:
+        host: localhost
+        port: 25
+        subject: Kibana service does not work on ---- therefore, service is restarted
+        body: Hi, Kibana service does not work on ----- therefore, service is restarted
+        from: ansible@intertech.com.tr
+        to: -----
+      run_once: true
+      delegate_to: localhost
+      when: kibana_service.stdout.find('running') == -1
+
+    - name: Kibana service is restarted if service is not running
+      command: systemctl restart  kibana
+      when: kibana_service.stdout.find('running') == -1
+
+    - name: Check Logstash Service
+      command: systemctl status logstash
+      register: logstash_service
+      ignore_errors: yes
+
+    - name: Logstash status
+      debug:
+        var: logstash_service.stdout_lines
+
+    - name: Send e-mail to inform Logstash service does not work therefore, service is restarted
+      connection: local
+      mail:
+        host: localhost
+        port: 25
+        subject: Logstash service does not work on server therefore, service is restarted
+        body: Hi, Logstash service does not work on server therefore, service is restarted
+        from: ansible@intertech.com.tr
+        to: -----------
+      run_once: true
+      delegate_to: localhost
+      when: logstash_service.stdout.find('running') == -1
+
+    - name: Logstash service is restarted if service is not running
+      command: systemctl restart logstash
+      when: logstash_service.stdout.find('running') == -1
