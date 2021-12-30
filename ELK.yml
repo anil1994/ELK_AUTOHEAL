@@ -48,7 +48,7 @@
         port: 25
         subject: Kibana service does not work on ---- therefore, service is restarted
         body: Hi, Kibana service does not work on ----- therefore, service is restarted
-        from: ansible@intertech.com.tr
+        from: ansible@....com.tr
         to: -----
       run_once: true
       delegate_to: localhost
@@ -74,7 +74,7 @@
         port: 25
         subject: Logstash service does not work on server therefore, service is restarted
         body: Hi, Logstash service does not work on server therefore, service is restarted
-        from: ansible@intertech.com.tr
+        from: ansible@.....com.tr
         to: -----------
       run_once: true
       delegate_to: localhost
